@@ -1,7 +1,7 @@
 const canvas = document.getElementById("canvas");
 const canvasContext = canvas.getContext("2d");
-const pacmanFrames = document.getElementsById("animation");
-const ghostFrames = document.getElementsById("ghost");
+const pacmanFrames = document.getElementById("animation");
+const ghostFrames = document.getElementById("ghost");
 
 let createRect = (x, y, width, height, color) => {
   canvasContext.fillStyle = color;
@@ -11,6 +11,14 @@ let createRect = (x, y, width, height, color) => {
 let fps = 30;
 let oneBlockSize = 20;
 let wallColor = "#342DCA";
+let wallSpaceWidth = oneBlockSize / 1.5;
+let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
+let wallInnerColor = "black";
+
+const DIRECTION_RIGHT = 4;
+const DIRECTION_UP = 3;
+const DIRECTION_LEFT = 2;
+const DIRECTION_BOTTOM = 1;
 
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -46,6 +54,7 @@ let update = () => {
   //todo
 };
 let draw = () => {
+  createRect(0, 0, canvas.width, canvas.height, "black");
   drawWalls();
 };
 
@@ -62,6 +71,42 @@ let drawWalls = () => {
           oneBlockSize,
           wallColor
         );
+        if (j > 0 && map[i][j - 1] == 1) {
+          createRect(
+            j * oneBlockSize,
+            i * oneBlockSize + wallOffset,
+            wallSpaceWidth + wallOffset,
+            wallSpaceWidth,
+            wallInnerColor
+          );
+        }
+        if (j < map[0].length - 1 && map[i][j + 1] == 1) {
+          createRect(
+            j * oneBlockSize + wallOffset,
+            i * oneBlockSize + wallOffset,
+            wallSpaceWidth + wallOffset,
+            wallSpaceWidth,
+            wallInnerColor
+          );
+        }
+        if (i > 0 && map[i - 1][j] == 1) {
+          createRect(
+            j * oneBlockSize + wallOffset,
+            i * oneBlockSize,
+            wallSpaceWidth,
+            wallSpaceWidth + wallOffset,
+            wallInnerColor
+          );
+        }
+        if (i < map[0].length - 1 && map[i + 1][j] == 1) {
+          createRect(
+            j * oneBlockSize + wallOffset,
+            i * oneBlockSize + wallOffset,
+            wallSpaceWidth,
+            wallSpaceWidth + wallOffset,
+            wallInnerColor
+          );
+        }
       }
     }
   }
