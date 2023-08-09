@@ -59,10 +59,13 @@ class Pacman {
       map[this.getMapY()][this.getMapXRightSide()] == 1 ||
       map[this.getMapYRighttSide()][this.getMapXRightSide()] == 1
     ) {
+      return true;
     }
   }
 
-  checkGhostCollision() {}
+  checkGhostCollision() {
+    
+  }
 
   changeDirectionIfPossible() {}
 
