@@ -88,7 +88,7 @@ class Pacman {
     return isCollided;
   }
 
-  checkGhostCollision(ghosts) {
+  checkGhostCollision() {
     for (let i = 0; i < ghosts.length; i++) {
       let ghost = ghosts[i];
       if (

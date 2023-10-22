@@ -31,9 +31,6 @@ let wallSpaceWidth = oneBlockSize / 1.6;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 
-// we now create the map of the walls,
-// if 1 wall, if 0 not wall
-// 21 columns // 23 rows
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
@@ -70,12 +67,6 @@ let randomTargetsForGhosts = [
   },
 ];
 
-// for (let i = 0; i < map.length; i++) {
-//     for (let j = 0; j < map[0].length; j++) {
-//         map[i][j] = 2;
-//     }
-// }
-
 let createNewPacman = () => {
   pacman = new Pacman(
     oneBlockSize,
@@ -87,8 +78,21 @@ let createNewPacman = () => {
 };
 
 let gameLoop = () => {
-  update();
   draw();
+  update();
+};
+
+let update = () => {
+  pacman.moveProcess();
+  pacman.eat();
+  for (let i = 0; i < ghosts.length; i++) {
+    ghosts[i].moveProcess();
+  }
+
+  if (pacman.checkGhostCollision(ghosts)) {
+    onGhostCollision();
+    restartGame();
+  }
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
@@ -98,20 +102,24 @@ let restartPacmanAndGhosts = () => {
   createGhosts();
 };
 
-let onGhostCollision = () => {
+let restartGame = () => {
+  createNewPacman();
+  createGhosts();
   lives--;
-  restartPacmanAndGhosts();
   if (lives == 0) {
+    gameOver();
   }
 };
 
-let update = () => {
-  pacman.moveProcess();
-  pacman.eat();
-  updateGhosts();
-  if (pacman.checkGhostCollision(ghosts)) {
-    onGhostCollision();
-  }
+let gameOver = () => {
+  clearInterval(gameInterval);
+  drawGameOver();
+};
+
+let drawGameOver = () => {
+  canvasContext.font = "20px Emulogic";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText = ("Game Over!", 200, 200);
 };
 
 let drawFoods = () => {
@@ -130,7 +138,7 @@ let drawFoods = () => {
   }
 };
 
-let drawRemainingLives = () => {
+let drawLives = () => {
   canvasContext.font = "20px Emulogic";
   canvasContext.fillStyle = "white";
   canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
@@ -164,7 +172,7 @@ let draw = () => {
   drawGhosts();
   pacman.draw();
   drawScore();
-  drawRemainingLives();
+  drawLives();
 };
 
 let drawWalls = () => {
