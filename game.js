@@ -30,6 +30,7 @@ let ghosts = [];
 let wallSpaceWidth = oneBlockSize / 1.6;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
+let foodCount = 1000;
 
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -89,18 +90,16 @@ let update = () => {
     ghosts[i].moveProcess();
   }
 
-  if (pacman.checkGhostCollision(ghosts)) {
-    onGhostCollision();
+  if (pacman.checkGhostCollision()) {
     restartGame();
+  }
+  if (score >= foodCount) {
+    drawWin();
+    clearInterval(gameInterval);
   }
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);
-
-let restartPacmanAndGhosts = () => {
-  createNewPacman();
-  createGhosts();
-};
 
 let restartGame = () => {
   createNewPacman();
@@ -114,12 +113,6 @@ let restartGame = () => {
 let gameOver = () => {
   clearInterval(gameInterval);
   drawGameOver();
-};
-
-let drawGameOver = () => {
-  canvasContext.font = "20px Emulogic";
-  canvasContext.fillStyle = "white";
-  canvasContext.fillText = ("Game Over!", 200, 200);
 };
 
 let drawFoods = () => {
@@ -138,10 +131,23 @@ let drawFoods = () => {
   }
 };
 
-let drawLives = () => {
-  canvasContext.font = "20px Emulogic";
+let drawGameOver = () => {
+  canvasContext.font = "20px Arial";
   canvasContext.fillStyle = "white";
-  canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1));
+  canvasContext.fillText = ("Game Over!", 200, 200);
+};
+
+let drawWin = () => {
+  canvasContext.font = "20px Popins";
+  canvasContext.fillStyle = "white";
+  canvasContext;
+  canvasContext.fillText = ("Winner!", 200, 200);
+};
+
+let drawLives = () => {
+  canvasContext.font = "20px Popins";
+  canvasContext.fillStyle = "white";
+  canvasContext.fillText("Lives: ", 220, oneBlockSize * (map.length + 1) + 10);
 
   for (let i = 0; i < lives; i++) {
     canvasContext.drawImage(
@@ -151,7 +157,7 @@ let drawLives = () => {
       oneBlockSize,
       oneBlockSize,
       350 + i * oneBlockSize,
-      oneBlockSize * map.length + 2,
+      oneBlockSize * map.length + 10,
       oneBlockSize,
       oneBlockSize
     );
@@ -159,7 +165,7 @@ let drawLives = () => {
 };
 
 let drawScore = () => {
-  canvasContext.font = "20px Emulogic";
+  canvasContext.font = "20px Press Start 2P";
   canvasContext.fillStyle = "white";
   canvasContext.fillText("Score: " + score, 0, oneBlockSize * (map.length + 1));
 };
